@@ -5,7 +5,8 @@ import { AppModule } from '../../app.module';
 
 @Component({
   selector: 'app-login',
-  standalone: false,
+  standalone: true,
+  imports: [AppModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
