@@ -4,6 +4,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { Router } from '@angular/router';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -13,6 +15,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatGridListModule,
     MatButtonModule,
     MatListModule,
+    MatIconModule,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',

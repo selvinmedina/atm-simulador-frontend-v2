@@ -6,25 +6,46 @@
     <mat-card-content>
       <mat-grid-list cols="2" rowHeight="150px" gutterSize="10px">
         <mat-grid-tile>
-          <button mat-raised-button color="primary" class="home-option">Transacción Retiro</button>
+          <button mat-raised-button color="primary" class="home-option">
+            <mat-icon>local_atm</mat-icon>
+            Retiro
+          </button>
         </mat-grid-tile>
         <mat-grid-tile>
-          <button mat-raised-button color="primary" class="home-option">Consulta de saldo</button>
+          <button mat-raised-button color="primary" class="home-option">
+            <mat-icon>account_balance_wallet</mat-icon>
+            Consulta de saldo
+          </button>
         </mat-grid-tile>
         <mat-grid-tile>
-          <button mat-raised-button color="primary" class="home-option">Transferencia entre cuentas</button>
+          <button mat-raised-button color="primary" class="home-option">
+            <mat-icon>swap_horiz</mat-icon>
+            Transferencia
+          </button>
         </mat-grid-tile>
         <mat-grid-tile>
-          <button mat-raised-button color="primary" class="home-option">Pago de servicio público (ENEE, SANAA, Hondutel)</button>
+          <button mat-raised-button color="primary" class="home-option">
+            <mat-icon>receipt</mat-icon>
+            Servicios públicos
+          </button>
         </mat-grid-tile>
         <mat-grid-tile>
-          <button mat-raised-button color="primary" class="home-option">Cambio de Pin</button>
+          <button mat-raised-button color="primary" class="home-option">
+            <mat-icon>vpn_key</mat-icon>
+            Cambio de Pin
+          </button>
         </mat-grid-tile>
         <mat-grid-tile>
-          <button mat-raised-button color="primary" class="home-option">Bitácora de las transacciones realizadas por el usuario</button>
+          <button mat-raised-button color="primary" class="home-option">
+            <mat-icon>history</mat-icon>
+            Historial de transacciones
+          </button>
         </mat-grid-tile>
       </mat-grid-list>
-      <button mat-raised-button color="warn" class="logout-button" (click)="logout()">Cerrar Sesión</button>
+      <button mat-raised-button color="warn" class="logout-button" (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        Cerrar Sesión
+      </button>
     </mat-card-content>
   </mat-card>
 </div>
