@@ -9,7 +9,7 @@ import {
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { UsuariosService } from '../../services/usuarios.service.service';
 
@@ -29,6 +29,7 @@ import { UsuariosService } from '../../services/usuarios.service.service';
 export class RegisterComponent implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly toastr = inject(ToastrService);
+  private readonly router = inject(Router);
   @ViewChild('formDirective') formDirective?: NgForm;
 
   registerForm = this.fb.nonNullable.group(
@@ -81,6 +82,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
           console.log(response);
           this.registerForm.reset();
           this.resetFormValidations();
+          this.router.navigate(['/home']);
         },
         (error) => {
           this.toastr.error('Error al registrar', 'Error');

@@ -1,0 +1,23 @@
+.home-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-card {
+  width: 80%;
+  height: 80%;
+}
+
+.home-option {
+  width: 100%;
+  height: 100%;
+  font-size: 1.2rem;
+}
+
+.logout-button {
+  margin-top: 20px;
+  width: 100%;
+  font-size: 1rem;
+}

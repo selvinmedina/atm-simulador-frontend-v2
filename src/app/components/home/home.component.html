@@ -1,0 +1,30 @@
+<div class="home-container">
+  <mat-card class="home-card">
+    <mat-card-header>
+      <mat-card-title>Opciones del Usuario</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-grid-list cols="2" rowHeight="150px" gutterSize="10px">
+        <mat-grid-tile>
+          <button mat-raised-button color="primary" class="home-option">Transacción Retiro</button>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <button mat-raised-button color="primary" class="home-option">Consulta de saldo</button>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <button mat-raised-button color="primary" class="home-option">Transferencia entre cuentas</button>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <button mat-raised-button color="primary" class="home-option">Pago de servicio público (ENEE, SANAA, Hondutel)</button>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <button mat-raised-button color="primary" class="home-option">Cambio de Pin</button>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <button mat-raised-button color="primary" class="home-option">Bitácora de las transacciones realizadas por el usuario</button>
+        </mat-grid-tile>
+      </mat-grid-list>
+      <button mat-raised-button color="warn" class="logout-button" (click)="logout()">Cerrar Sesión</button>
+    </mat-card-content>
+  </mat-card>
+</div>

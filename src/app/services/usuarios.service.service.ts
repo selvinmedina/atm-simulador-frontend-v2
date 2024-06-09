@@ -47,7 +47,6 @@ export class UsuariosService {
           }
 
           const okElement = loginResult.getElementsByTagName('Ok')[0];
-          const messageElement = loginResult.getElementsByTagName('Message')[0];
 
           if (okElement && okElement.textContent === 'false') {
             throw new HttpErrorResponse({ status: 422 });
