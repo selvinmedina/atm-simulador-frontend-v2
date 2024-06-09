@@ -1,19 +1,11 @@
 import { Component } from '@angular/core';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+
+import { FormBuilder, Validators } from '@angular/forms';
+import { AppModule } from '../../app.module';
+
 @Component({
   selector: 'app-login',
-  standalone: true,
-  imports: [
-    MatInputModule,
-    MatButtonModule,
-    MatCardModule,
-    ReactiveFormsModule,
-    RouterModule,
-  ],
+  standalone: false,
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })

@@ -9,23 +9,19 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
-// import { RegistroService } from '../services/registro.service'; // Asegúrate de ajustar la ruta según sea necesario
+import { UsuariosService } from '../../services/usuarios.service.service';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { AppModule } from '../../app.module';
 
 @Component({
   selector: 'app-register',
-  standalone: true,
-  imports: [
-    MatInputModule,
-    MatButtonModule,
-    MatCardModule,
-    ReactiveFormsModule,
-    RouterModule,
-  ],
+  standalone: false,
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
+  private readonly toastr = inject(ToastrService);
 
   registerForm = this.fb.nonNullable.group(
     {
@@ -44,8 +40,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     }
   );
 
-  constructor() // private registroService: RegistroService
-  {}
+  constructor(private usuariosService: UsuariosService) {}
 
   ngOnInit() {}
 
@@ -72,9 +67,16 @@ export class RegisterComponent implements OnInit, OnDestroy {
     if (this.registerForm.valid) {
       const { nombreUsuario, pin } = this.registerForm.value;
       console.log('Formulario válido', this.registerForm.value);
-      // this.registroService.registerByHttp(nombreUsuario!, pin!).subscribe(response => {
-      //   console.log(response);
-      // });
+      this.usuariosService.register(nombreUsuario!, pin!).subscribe(
+        response => {
+          this.toastr.success('Registro exitoso', 'Éxito');
+          console.log(response);
+        },
+        error => {
+          this.toastr.error('Error al registrar', 'Error');
+          console.error(error);
+        }
+      );
     }
   }
 }
