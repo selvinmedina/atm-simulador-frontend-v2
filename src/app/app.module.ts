@@ -14,7 +14,6 @@ import { ReactiveFormsModule } from '@angular/forms';
   ],
   providers: [],
   exports: [
-    ToastrModule,
     MatInputModule,
     MatButtonModule,
     MatCardModule,

@@ -8,9 +8,9 @@ import { AppModule } from './app.module';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    importProvidersFrom(AppModule),
     provideRouter(routes),
     provideAnimationsAsync(),
     provideHttpClient(),
-    importProvidersFrom(AppModule),
   ],
 };
