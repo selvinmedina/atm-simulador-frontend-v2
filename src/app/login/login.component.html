@@ -1,18 +1,35 @@
 <mat-card>
-  <mat-card-title>Inicio de Sesión</mat-card-title>
+  <mat-card-header>
+    <mat-card-title>Inicio de Sesión</mat-card-title>
+  </mat-card-header>
   <mat-card-content>
-    <form>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <mat-form-field appearance="fill">
         <mat-label>Usuario</mat-label>
-        <input matInput placeholder="Ingrese su usuario" required>
+        <input matInput formControlName="nombreUsuario" placeholder="Ingrese su usuario" required>
+        @if (loginForm.get('nombreUsuario')?.hasError('required')) {
+          <mat-error>El usuario es obligatorio</mat-error>
+        }
+        @if (loginForm.get('nombreUsuario')?.hasError('maxlength')) {
+          <mat-error>El usuario no puede tener más de 255 caracteres</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="fill">
-        <mat-label>Contraseña</mat-label>
-        <input matInput type="password" placeholder="Ingrese su contraseña" required>
+        <mat-label>PIN</mat-label>
+        <input matInput type="password" formControlName="pin" placeholder="Ingrese su PIN" required>
+        @if (loginForm.get('pin')?.hasError('required')) {
+          <mat-error>El PIN es obligatorio</mat-error>
+        }
+        @if (loginForm.get('pin')?.hasError('minlength')) {
+          <mat-error>El PIN debe tener 4 caracteres</mat-error>
+        }
+        @if (loginForm.get('pin')?.hasError('maxlength')) {
+          <mat-error>El PIN debe tener 4 caracteres</mat-error>
+        }
       </mat-form-field>
 
-      <button mat-raised-button color="primary">Iniciar Sesión</button>
+      <button mat-raised-button color="primary" [disabled]="loginForm.invalid">Iniciar Sesión</button>
     </form>
   </mat-card-content>
 </mat-card>
