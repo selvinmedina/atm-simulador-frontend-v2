@@ -31,13 +31,8 @@ export class HomeComponent implements OnInit {
       console.log(userData);
     });
   }
-
-  navigateToHistorial() {
-    this.router.navigate(['/historial-transacciones']);
-  }
-
-  navigateToTransferencia() {
-    this.router.navigate(['/transferencia']);
+  goTo(route: string): void {
+    this.router.navigate([`/${route}`]);
   }
 
   logout() {

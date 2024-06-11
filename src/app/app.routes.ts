@@ -6,6 +6,7 @@ import { HomeComponent } from './components/home/home.component';
 import { redirectGuard } from './redirect.guard';
 import { HistorialTransaccionesComponent } from './components/historial-transacciones/historial-transacciones.component';
 import { TransferenciaComponent } from './components/transferencia/transferencia.component';
+import { SaldoComponent } from './components/saldo/saldo.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [redirectGuard] },
@@ -13,5 +14,6 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [authGuard] },
   { path: 'historial-transacciones', component: HistorialTransaccionesComponent, canActivate: [authGuard] },
   { path: 'transferencia', component: TransferenciaComponent, canActivate: [authGuard] },
+  { path: 'saldo', component: SaldoComponent, canActivate: [authGuard] },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];

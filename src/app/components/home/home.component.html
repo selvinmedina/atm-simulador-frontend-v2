@@ -10,19 +10,19 @@
       </button>
       <mat-grid-list cols="2" rowHeight="150px" gutterSize="10px">
         <mat-grid-tile>
-          <button mat-raised-button color="primary" class="home-option">
+          <button mat-raised-button color="primary" class="home-option" (click)="goTo('retiro')">
             <mat-icon>local_atm</mat-icon>
             <span>Retiro</span>
           </button>
         </mat-grid-tile>
         <mat-grid-tile>
-          <button mat-raised-button color="primary" class="home-option">
+          <button mat-raised-button color="primary" class="home-option" (click)="goTo('saldo')">
             <mat-icon>account_balance_wallet</mat-icon>
             <span>Consulta de saldo</span>
           </button>
         </mat-grid-tile>
         <mat-grid-tile>
-          <button mat-raised-button color="primary" class="home-option" (click)="navigateToTransferencia()">
+          <button mat-raised-button color="primary" class="home-option" (click)="goTo('transferencia')">
             <mat-icon>swap_horiz</mat-icon>
             <span>Transferencia</span>
           </button>
@@ -40,13 +40,12 @@
           </button>
         </mat-grid-tile>
         <mat-grid-tile>
-          <button mat-raised-button color="primary" class="home-option" (click)="navigateToHistorial()">
+          <button mat-raised-button color="primary" class="home-option" (click)="goTo('historial-transacciones')">
             <mat-icon>history</mat-icon>
             <span>Historial de transacciones</span>
           </button>
         </mat-grid-tile>
       </mat-grid-list>
-
     </mat-card-content>
   </mat-card>
 </div>
