@@ -106,7 +106,7 @@ export class UsuariosService {
       throw new Error('No token found in local storage');
     }
 
-    const bodyContent = `<ser:GetUserData> <ser:token>${token}</ser:token> </ser:GetUserData>`;
+    const bodyContent = `<ser:GetUserData> </ser:GetUserData>`;
 
     const soapEnvelope = this.buildSoapEnvelope(bodyContent);
     const hmac = this.generateHmac(soapEnvelope);
