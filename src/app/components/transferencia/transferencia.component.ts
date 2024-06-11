@@ -1,5 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CuentasService } from '../../services/cuentas.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -12,7 +17,15 @@ import { CurrencyPipe } from '../../pipes/currency.pipe';
 @Component({
   selector: 'app-transferencia',
   standalone: true,
-  imports: [ReactiveFormsModule, MatButtonModule, MatInputModule, MatCardModule, MatIconModule, MatSelectModule, CurrencyPipe],
+  imports: [
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatInputModule,
+    MatCardModule,
+    MatIconModule,
+    MatSelectModule,
+    CurrencyPipe,
+  ],
   templateUrl: './transferencia.component.html',
   styleUrls: ['./transferencia.component.scss'],
 })
@@ -29,7 +42,14 @@ export class TransferenciaComponent implements OnInit {
     this.transferenciaForm = this.fb.group({
       cuentaOrigenId: ['', Validators.required],
       cuentaDestinoId: ['', Validators.required],
-      monto: ['', [Validators.required, Validators.pattern('^[0-9]*$'), this.validarMonto()]],
+      monto: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern('^[0-9]*$'),
+          this.validarMonto(),
+        ],
+      ],
     });
   }
 
@@ -43,16 +63,22 @@ export class TransferenciaComponent implements OnInit {
       }
     );
 
-    this.transferenciaForm.get('cuentaOrigenId')?.valueChanges.subscribe(value => {
-      const cuenta = this.cuentas.find(c => c.CuentaId === value);
-      this.saldoCuentaOrigen = cuenta ? parseFloat(cuenta.Saldo) : 0;
-      this.transferenciaForm.get('monto')?.updateValueAndValidity();
-    });
+    this.transferenciaForm
+      .get('cuentaOrigenId')
+      ?.valueChanges.subscribe((value) => {
+        const cuenta = this.cuentas.find((c) => c.CuentaId === value);
+        this.saldoCuentaOrigen = cuenta ? parseFloat(cuenta.Saldo) : 0;
+        this.transferenciaForm.get('monto')?.updateValueAndValidity();
+      });
   }
 
   validarMonto() {
     return (control: any) => {
-      if (control && this.saldoCuentaOrigen && control.value > this.saldoCuentaOrigen) {
+      if (
+        control &&
+        this.saldoCuentaOrigen &&
+        control.value > this.saldoCuentaOrigen
+      ) {
         return { montoInvalido: true };
       }
       return null;
@@ -61,21 +87,24 @@ export class TransferenciaComponent implements OnInit {
 
   onSubmit(): void {
     if (this.transferenciaForm.valid) {
-      const { cuentaOrigenId, cuentaDestinoId, monto } = this.transferenciaForm.value;
-      this.cuentasService.transferir(cuentaOrigenId, cuentaDestinoId, monto).subscribe(
-        (success) => {
-          if (success) {
-            alert('Transferencia realizada con éxito');
-            this.router.navigate(['/home']);
-          } else {
+      const { cuentaOrigenId, cuentaDestinoId, monto } =
+        this.transferenciaForm.value;
+      this.cuentasService
+        .transferir(cuentaOrigenId, cuentaDestinoId, monto)
+        .subscribe(
+          (success) => {
+            if (success) {
+              alert('Transferencia realizada con éxito');
+              this.router.navigate(['/home']);
+            } else {
+              alert('Error al realizar la transferencia');
+            }
+          },
+          (error) => {
+            console.error('Error al realizar la transferencia', error);
             alert('Error al realizar la transferencia');
           }
-        },
-        (error) => {
-          console.error('Error al realizar la transferencia', error);
-          alert('Error al realizar la transferencia');
-        }
-      );
+        );
     }
   }
 

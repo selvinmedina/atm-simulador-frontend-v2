@@ -143,4 +143,61 @@ export class CuentasService {
         })
       );
   }
+
+  retirar(cuentaId: string, monto: string): Observable<any> {
+    const payload = this.encryptPayload({
+      cuentaId: cuentaId,
+      monto: monto,
+    });
+
+    const bodyContent = `<ser:Retirar> <ser:cuentaId>${payload.cuentaId}</ser:cuentaId> <ser:monto>${payload.monto}</ser:monto> </ser:Retirar>`;
+
+    const soapEnvelope = this.buildSoapEnvelope(bodyContent);
+    const hmac = this.generateHmac(soapEnvelope);
+
+    const headers = this.httpOptions.headers.set('X-HMAC-Signature', hmac);
+
+    return this.http
+      .post(environment.apiUrl + '/CuentasService.svc', soapEnvelope, {
+        ...this.httpOptions,
+        headers,
+      })
+      .pipe(
+        map((response) => {
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(response as string, 'text/xml');
+
+          const retirarResult =
+            xmlDoc.getElementsByTagName('RetirarResult')[0];
+          if (!retirarResult) {
+            throw new Error('Invalid XML response');
+          }
+
+          const dataElement = retirarResult.getElementsByTagName('Data')[0];
+          if (!dataElement) {
+            throw new Error('Invalid XML response');
+          }
+
+          const montoRetirado = this.encryptionService.decrypt(
+            dataElement.getElementsByTagName('MontoRetirado')[0].textContent!
+          );
+          const saldoActual = this.encryptionService.decrypt(
+            dataElement.getElementsByTagName('SaldoActual')[0].textContent!
+          );
+          const numeroCuenta = this.encryptionService.decrypt(
+            dataElement.getElementsByTagName('NumeroCuenta')[0].textContent!
+          );
+          const fechaTransaccion = this.encryptionService.decrypt(
+            dataElement.getElementsByTagName('FechaTransaccion')[0].textContent!
+          );
+
+          return {
+            montoRetirado,
+            saldoActual,
+            numeroCuenta,
+            fechaTransaccion,
+          };
+        })
+      );
+  }
 }
