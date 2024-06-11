@@ -4,6 +4,7 @@ import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { User } from '../../models/user.model';
 import { Token } from '../../models/token.model';
+import { EncryptionService } from './encryption.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,25 +18,37 @@ export class UsuariosService {
     responseType: 'text' as 'json', // To handle XML response as text
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private encryptionService: EncryptionService) {}
+
+  private encryptPayload(payload: any): any {
+    for (const key in payload) {
+      if (payload.hasOwnProperty(key)) {
+        payload[key] = this.encryptionService.encrypt(payload[key]);
+      }
+    }
+    return payload;
+  }
+
+  private generateHmac(message: string): string {
+    return this.encryptionService.generateHmacMd5(message.trim());
+  }
+
+  private buildSoapEnvelope(bodyContent: string): string {
+    return `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://atm.com/service/"> <soapenv:Header/> <soapenv:Body> ${bodyContent} </soapenv:Body> </soapenv:Envelope>`;
+  }
 
   login(nombreUsuario: string, pin: string): Observable<Token> {
-    const xmlData = `
-    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://atm.com/service/">
-      <soapenv:Header/>
-      <soapenv:Body>
-        <ser:Login>
-          <ser:usuarioDto>
-            <ser:NombreUsuario>${nombreUsuario}</ser:NombreUsuario>
-            <ser:Pin>${pin}</ser:Pin>
-          </ser:usuarioDto>
-        </ser:Login>
-      </soapenv:Body>
-    </soapenv:Envelope>
-  `;
+    const usuarioDto = this.encryptPayload({ NombreUsuario: nombreUsuario, Pin: pin });
+
+    const bodyContent = `<ser:Login> <ser:usuarioDto> <ser:NombreUsuario>${usuarioDto.NombreUsuario}</ser:NombreUsuario> <ser:Pin>${usuarioDto.Pin}</ser:Pin> </ser:usuarioDto> </ser:Login>`;
+
+    const soapEnvelope = this.buildSoapEnvelope(bodyContent);
+    const hmac = this.generateHmac(soapEnvelope);
+
+    const headers = this.httpOptions.headers.set('X-HMAC-Signature', hmac);
 
     return this.http
-      .post(environment.apiUrl + '/UsuariosService.svc', xmlData, this.httpOptions)
+      .post(environment.apiUrl + '/UsuariosService.svc', soapEnvelope, { ...this.httpOptions, headers })
       .pipe(
         map(response => {
           const parser = new DOMParser();
@@ -93,19 +106,15 @@ export class UsuariosService {
       throw new Error('No token found in local storage');
     }
 
-    const xmlData = `
-    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://atm.com/service/">
-      <soapenv:Header/>
-      <soapenv:Body>
-        <ser:GetUserData>
-          <ser:token>${token}</ser:token>
-        </ser:GetUserData>
-      </soapenv:Body>
-    </soapenv:Envelope>
-    `;
+    const bodyContent = `<ser:GetUserData> <ser:token>${token}</ser:token> </ser:GetUserData>`;
+
+    const soapEnvelope = this.buildSoapEnvelope(bodyContent);
+    const hmac = this.generateHmac(soapEnvelope);
+
+    const headers = this.httpOptions.headers.set('X-HMAC-Signature', hmac);
 
     return this.http
-      .post(environment.apiUrl + '/UsuariosService.svc', xmlData, this.httpOptions)
+      .post(environment.apiUrl + '/UsuariosService.svc', soapEnvelope, { ...this.httpOptions, headers })
       .pipe(
         map(response => {
           const parser = new DOMParser();
@@ -136,22 +145,17 @@ export class UsuariosService {
   }
 
   register(nombreUsuario: string, pin: string): Observable<any> {
-    const xmlData = `
-    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://atm.com/service/">
-      <soapenv:Header/>
-      <soapenv:Body>
-        <ser:Registro>
-          <ser:usuarioDto>
-            <ser:NombreUsuario>${nombreUsuario}</ser:NombreUsuario>
-            <ser:Pin>${pin}</ser:Pin>
-          </ser:usuarioDto>
-        </ser:Registro>
-      </soapenv:Body>
-    </soapenv:Envelope>
-  `;
+    const usuarioDto = this.encryptPayload({ NombreUsuario: nombreUsuario, Pin: pin });
+
+    const bodyContent = `<ser:Registro> <ser:usuarioDto> <ser:NombreUsuario>${usuarioDto.NombreUsuario}</ser:NombreUsuario> <ser:Pin>${usuarioDto.Pin}</ser:Pin> </ser:usuarioDto> </ser:Registro>`;
+
+    const soapEnvelope = this.buildSoapEnvelope(bodyContent);
+    const hmac = this.generateHmac(soapEnvelope);
+
+    const headers = this.httpOptions.headers.set('X-HMAC-Signature', hmac);
 
     return this.http
-      .post(environment.apiUrl + '/UsuariosService.svc', xmlData, this.httpOptions)
+      .post(environment.apiUrl + '/UsuariosService.svc', soapEnvelope, { ...this.httpOptions, headers })
       .pipe(
         map(response => {
           const parser = new DOMParser();
