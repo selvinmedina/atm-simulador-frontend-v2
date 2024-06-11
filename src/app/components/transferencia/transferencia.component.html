@@ -1,0 +1,40 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Transferir Dinero</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="transferenciaForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="fill">
+        <mat-label>Cuenta Origen</mat-label>
+        <mat-select formControlName="cuentaOrigenId" required>
+          @for (cuenta of cuentas; track cuenta.CuentaId) {
+            <mat-option [value]="cuenta.CuentaId">
+              {{ cuenta.NumeroCuenta }} - Saldo: {{ cuenta.Saldo | currency }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>ID Cuenta Destino</mat-label>
+        <input matInput formControlName="cuentaDestinoId" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Monto</mat-label>
+        <input matInput formControlName="monto" required>
+        @if (transferenciaForm.get('monto')?.hasError('montoInvalido')) {
+          <mat-error>El monto no puede ser mayor al saldo de la cuenta origen.</mat-error>
+        }
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="transferenciaForm.invalid">
+        Transferir
+      </button>
+      <button mat-raised-button color="accent" type="button" (click)="goHome()">
+        <mat-icon>home</mat-icon>
+        Ir al Home
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>

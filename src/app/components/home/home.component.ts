@@ -36,6 +36,10 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/historial-transacciones']);
   }
 
+  navigateToTransferencia() {
+    this.router.navigate(['/transferencia']);
+  }
+
   logout() {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
