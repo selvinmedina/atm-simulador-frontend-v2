@@ -1,0 +1,47 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Historial de Transacciones</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <ng-container matColumnDef="transaccionId">
+        <th mat-header-cell *matHeaderCellDef> ID Transacción </th>
+        <td mat-cell *matCellDef="let element"> {{element.TransaccionId}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="cuentaId">
+        <th mat-header-cell *matHeaderCellDef> ID Cuenta </th>
+        <td mat-cell *matCellDef="let element"> {{element.CuentaId}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="tipoTransaccion">
+        <th mat-header-cell *matHeaderCellDef> Tipo de Transacción </th>
+        <td mat-cell *matCellDef="let element"> {{element.TipoTransaccion}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="monto">
+        <th mat-header-cell *matHeaderCellDef> Monto </th>
+        <td mat-cell *matCellDef="let element"> {{element.Monto}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="fechaTransaccion">
+        <th mat-header-cell *matHeaderCellDef> Fecha </th>
+        <td mat-cell *matCellDef="let element"> {{element.FechaTransaccion}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="estado">
+        <th mat-header-cell *matHeaderCellDef> Estado </th>
+        <td mat-cell *matCellDef="let element"> {{element.Estado}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <div class="button-container">
+      <button mat-raised-button color="primary" (click)="goHome()">
+        <mat-icon>home</mat-icon>
+        <span>Ir al Home</span>
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>

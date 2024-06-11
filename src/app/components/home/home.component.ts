@@ -32,6 +32,10 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  navigateToHistorial() {
+    this.router.navigate(['/historial-transacciones']);
+  }
+
   logout() {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);

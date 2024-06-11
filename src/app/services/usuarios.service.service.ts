@@ -1,4 +1,8 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -13,12 +17,15 @@ export class UsuariosService {
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'text/xml',
-      'Accept': 'text/xml',
+      Accept: 'text/xml',
     }),
     responseType: 'text' as 'json', // To handle XML response as text
   };
 
-  constructor(private http: HttpClient, private encryptionService: EncryptionService) {}
+  constructor(
+    private http: HttpClient,
+    private encryptionService: EncryptionService
+  ) {}
 
   private encryptPayload(payload: any): any {
     for (const key in payload) {
@@ -38,7 +45,10 @@ export class UsuariosService {
   }
 
   login(nombreUsuario: string, pin: string): Observable<Token> {
-    const usuarioDto = this.encryptPayload({ NombreUsuario: nombreUsuario, Pin: pin });
+    const usuarioDto = this.encryptPayload({
+      NombreUsuario: nombreUsuario,
+      Pin: pin,
+    });
 
     const bodyContent = `<ser:Login> <ser:usuarioDto> <ser:NombreUsuario>${usuarioDto.NombreUsuario}</ser:NombreUsuario> <ser:Pin>${usuarioDto.Pin}</ser:Pin> </ser:usuarioDto> </ser:Login>`;
 
@@ -48,9 +58,12 @@ export class UsuariosService {
     const headers = this.httpOptions.headers.set('X-HMAC-Signature', hmac);
 
     return this.http
-      .post(environment.apiUrl + '/UsuariosService.svc', soapEnvelope, { ...this.httpOptions, headers })
+      .post(environment.apiUrl + '/UsuariosService.svc', soapEnvelope, {
+        ...this.httpOptions,
+        headers,
+      })
       .pipe(
-        map(response => {
+        map((response) => {
           const parser = new DOMParser();
           const xmlDoc = parser.parseFromString(response as string, 'text/xml');
 
@@ -70,22 +83,42 @@ export class UsuariosService {
             throw new Error('Invalid XML response');
           }
 
-          const tokenElement = dataElement.getElementsByTagName('access_token')[0];
-          const tokenTypeElement = dataElement.getElementsByTagName('token_type')[0];
-          const expiresInElement = dataElement.getElementsByTagName('expires_in')[0];
+          const tokenElement =
+            dataElement.getElementsByTagName('access_token')[0];
+          const tokenTypeElement =
+            dataElement.getElementsByTagName('token_type')[0];
+          const expiresInElement =
+            dataElement.getElementsByTagName('expires_in')[0];
           const expElement = dataElement.getElementsByTagName('exp')[0];
-          const refreshTokenElement = dataElement.getElementsByTagName('refresh_token')[0];
+          const refreshTokenElement =
+            dataElement.getElementsByTagName('refresh_token')[0];
 
-          if (!tokenElement || !tokenTypeElement || !expiresInElement || !expElement) {
+          if (
+            !tokenElement ||
+            !tokenTypeElement ||
+            !expiresInElement ||
+            !expElement
+          ) {
             throw new Error('Invalid XML response');
           }
 
-          const token = tokenElement ? tokenElement.textContent : '';
-          const tokenType = tokenTypeElement ? tokenTypeElement.textContent : '';
+          const token = this.encryptionService.decrypt(
+            (tokenElement ? tokenElement.textContent : '')!
+          );
+          const tokenType = this.encryptionService.decrypt(
+            (tokenTypeElement ? tokenTypeElement.textContent : '')!
+          );
           const expiresIn =
-            expiresInElement && expiresInElement.textContent ? +expiresInElement.textContent : 0;
-          const exp = expElement && expElement.textContent ? +expElement.textContent : 0;
-          const refreshToken = refreshTokenElement ? refreshTokenElement.textContent : '';
+            expiresInElement && expiresInElement.textContent
+              ? +this.encryptionService.decrypt(expiresInElement.textContent!)
+              : 0;
+          const exp =
+            expElement && expElement.textContent
+              ? +this.encryptionService.decrypt(expElement.textContent!)
+              : 0;
+          const refreshToken = this.encryptionService.decrypt(
+            (refreshTokenElement ? refreshTokenElement.textContent : '')!
+          );
 
           localStorage.setItem('token', token!);
 
@@ -114,13 +147,17 @@ export class UsuariosService {
     const headers = this.httpOptions.headers.set('X-HMAC-Signature', hmac);
 
     return this.http
-      .post(environment.apiUrl + '/UsuariosService.svc', soapEnvelope, { ...this.httpOptions, headers })
+      .post(environment.apiUrl + '/UsuariosService.svc', soapEnvelope, {
+        ...this.httpOptions,
+        headers,
+      })
       .pipe(
-        map(response => {
+        map((response) => {
           const parser = new DOMParser();
           const xmlDoc = parser.parseFromString(response as string, 'text/xml');
 
-          const getUserDataResult = xmlDoc.getElementsByTagName('GetUserDataResult')[0];
+          const getUserDataResult =
+            xmlDoc.getElementsByTagName('GetUserDataResult')[0];
           if (!getUserDataResult) {
             throw new Error('Invalid XML response');
           }
@@ -135,7 +172,9 @@ export class UsuariosService {
             throw new Error('Invalid XML response');
           }
 
-          const userId = userIdElement.textContent;
+          const userId = this.encryptionService.decrypt(
+            userIdElement.textContent!
+          );
 
           return {
             UserId: userId,
@@ -145,7 +184,10 @@ export class UsuariosService {
   }
 
   register(nombreUsuario: string, pin: string): Observable<any> {
-    const usuarioDto = this.encryptPayload({ NombreUsuario: nombreUsuario, Pin: pin });
+    const usuarioDto = this.encryptPayload({
+      NombreUsuario: nombreUsuario,
+      Pin: pin,
+    });
 
     const bodyContent = `<ser:Registro> <ser:usuarioDto> <ser:NombreUsuario>${usuarioDto.NombreUsuario}</ser:NombreUsuario> <ser:Pin>${usuarioDto.Pin}</ser:Pin> </ser:usuarioDto> </ser:Registro>`;
 
@@ -155,13 +197,17 @@ export class UsuariosService {
     const headers = this.httpOptions.headers.set('X-HMAC-Signature', hmac);
 
     return this.http
-      .post(environment.apiUrl + '/UsuariosService.svc', soapEnvelope, { ...this.httpOptions, headers })
+      .post(environment.apiUrl + '/UsuariosService.svc', soapEnvelope, {
+        ...this.httpOptions,
+        headers,
+      })
       .pipe(
-        map(response => {
+        map((response) => {
           const parser = new DOMParser();
           const xmlDoc = parser.parseFromString(response as string, 'text/xml');
 
-          const registroResult = xmlDoc.getElementsByTagName('RegistroResult')[0];
+          const registroResult =
+            xmlDoc.getElementsByTagName('RegistroResult')[0];
           if (!registroResult) {
             throw new Error('Invalid XML response');
           }
@@ -176,8 +222,10 @@ export class UsuariosService {
             throw new Error('Invalid XML response');
           }
 
-          const userIdElement = dataElement.getElementsByTagName('UsuarioId')[0];
-          const nombreUsuarioElement = dataElement.getElementsByTagName('NombreUsuario')[0];
+          const userIdElement =
+            dataElement.getElementsByTagName('UsuarioId')[0];
+          const nombreUsuarioElement =
+            dataElement.getElementsByTagName('NombreUsuario')[0];
           const pinElement = dataElement.getElementsByTagName('Pin')[0];
 
           if (!userIdElement || !nombreUsuarioElement || !pinElement) {
@@ -185,9 +233,13 @@ export class UsuariosService {
           }
 
           return {
-            UsuarioId: userIdElement.textContent,
-            NombreUsuario: nombreUsuarioElement.textContent,
-            Pin: pinElement.textContent,
+            UsuarioId: this.encryptionService.decrypt(
+              userIdElement.textContent!
+            ),
+            NombreUsuario: this.encryptionService.decrypt(
+              nombreUsuarioElement.textContent!
+            ),
+            Pin: this.encryptionService.decrypt(pinElement.textContent!),
           };
         })
       );
