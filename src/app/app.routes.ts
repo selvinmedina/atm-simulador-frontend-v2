@@ -10,6 +10,7 @@ import { SaldoComponent } from './components/saldo/saldo.component';
 import { RetiroComponent } from './components/retiro/retiro.component';
 import { DepositoComponent } from './components/deposito/deposito.component';
 import { CambioPinComponent } from './components/cambio-pin/cambio-pin.component';
+import { PagoServiciosComponent } from './components/pago-servicios/pago-servicios.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [redirectGuard] },
@@ -21,5 +22,6 @@ export const routes: Routes = [
   { path: 'retiro', component: RetiroComponent, canActivate: [authGuard] },
   { path: 'deposito', component: DepositoComponent, canActivate: [authGuard] },
   { path: 'cambio-pin', component: CambioPinComponent },
+  { path: 'pago-servicios', component: PagoServiciosComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];
