@@ -244,4 +244,43 @@ export class UsuariosService {
         })
       );
   }
+
+  cambiarPin(nuevoPin: string): Observable<any> {
+    const payload = this.encryptPayload({
+      nuevoPin: nuevoPin,
+    });
+
+    const bodyContent = `<ser:CambiarPin> <ser:nuevoPin>${payload.nuevoPin}</ser:nuevoPin> </ser:CambiarPin>`;
+
+    const soapEnvelope = this.buildSoapEnvelope(bodyContent);
+    const hmac = this.generateHmac(soapEnvelope);
+
+    const headers = this.httpOptions.headers.set('X-HMAC-Signature', hmac);
+
+    return this.http
+      .post(environment.apiUrl + '/UsuariosService.svc', soapEnvelope, {
+        ...this.httpOptions,
+        headers,
+      })
+      .pipe(
+        map((response) => {
+          const parser = new DOMParser();
+          const xmlDoc = parser.parseFromString(response as string, 'text/xml');
+
+          const cambiarPinResult =
+            xmlDoc.getElementsByTagName('CambiarPinResult')[0];
+          if (!cambiarPinResult) {
+            throw new Error('Invalid XML response');
+          }
+
+          const dataElement = cambiarPinResult.getElementsByTagName('Data')[0];
+          if (!dataElement) {
+            throw new Error('Invalid XML response');
+          }
+
+          return dataElement.textContent === 'true';
+        })
+      );
+  }
+
 }

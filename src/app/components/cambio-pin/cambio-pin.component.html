@@ -1,0 +1,49 @@
+<div class="cambio-pin-container">
+  <mat-card class="cambio-pin-card">
+    <mat-card-header>
+      <mat-card-title>Cambiar PIN</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="cambioPinForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="fill">
+          <mat-label>Nuevo PIN</mat-label>
+          <input matInput type="password" formControlName="nuevoPin" required>
+          @if (cambioPinForm.get('nuevoPin')?.hasError('required')) {
+            <mat-error>El nuevo PIN es obligatorio</mat-error>
+          }
+          @if (cambioPinForm.get('nuevoPin')?.hasError('minlength')) {
+            <mat-error>El nuevo PIN debe tener 4 caracteres</mat-error>
+          }
+          @if (cambioPinForm.get('nuevoPin')?.hasError('maxlength')) {
+            <mat-error>El nuevo PIN debe tener 4 caracteres</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Confirmar PIN</mat-label>
+          <input matInput type="password" formControlName="confirmarPin" required>
+          @if (cambioPinForm.get('confirmarPin')?.hasError('required')) {
+            <mat-error>Confirmar PIN es obligatorio</mat-error>
+          }
+          @if (cambioPinForm.get('confirmarPin')?.hasError('mismatch')) {
+            <mat-error>Los PINs no coinciden</mat-error>
+          }
+          @if (cambioPinForm.get('confirmarPin')?.hasError('minlength')) {
+            <mat-error>El PIN debe tener 4 caracteres</mat-error>
+          }
+          @if (cambioPinForm.get('confirmarPin')?.hasError('maxlength')) {
+            <mat-error>El PIN debe tener 4 caracteres</mat-error>
+          }
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="cambioPinForm.invalid">
+          Cambiar PIN
+        </button>
+        <button mat-raised-button color="accent" type="button" class="home-button" (click)="goHome()">
+          <mat-icon>home</mat-icon>
+          Ir al Home
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
