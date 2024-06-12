@@ -1,0 +1,34 @@
+<div class="deposito-container">
+  <mat-card class="deposito-card">
+    <mat-card-header>
+      <mat-card-title>Depositar Dinero</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="depositoForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="fill">
+          <mat-label>Cuenta</mat-label>
+          <mat-select formControlName="cuentaId" required>
+            @for (cuenta of cuentas; track cuenta.CuentaId) {
+              <mat-option [value]="cuenta.CuentaId">
+                {{ cuenta.NumeroCuenta }} - Saldo: {{ cuenta.Saldo | currency }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Monto</mat-label>
+          <input matInput formControlName="monto" required>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="depositoForm.invalid">
+          Depositar
+        </button>
+        <button mat-raised-button color="accent" type="button" class="home-button" (click)="goHome()">
+          <mat-icon>home</mat-icon>
+          Ir al Home
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
